@@ -1,0 +1,83 @@
+GET /_cat/indices?v
+
+DELETE /eventslog
+
+PUT /eventslog
+{
+  "mappings":{
+    "event":{
+      "properties": {
+        "sourceId":{
+          "type":"string"
+        },
+        "sourceType":{
+          "type":"keyword"
+        },
+        "generatedOn":{
+          "type":"date"
+        },
+        "location":{
+          "type": "geo_point"
+        },
+        "level":{
+          "type":"keyword"
+        },
+        "tags":{
+          "type":"keyword"
+        }
+      }
+    }
+  }
+}
+
+DELETE /eventslog/event/1022017001
+
+PUT /eventslog/event/1022017001
+{
+  "sourceId":"EVT01022017001",
+  "sourceType":"sensor",
+  "generatedOn":"2017-02-01T18:26:47+05:00",
+  "location":{
+    "lat":"22.678430",
+    "lon":"88.456291"
+  },
+  "level":"fault",
+  "tags":["transformer","earth_fault"]
+}
+
+PUT /eventslog/event/1022017002
+{
+  "sourceId":"EVT01022017002",
+  "sourceType":"sensor",
+  "generatedOn":"2017-02-01T18:40:47+05:00",
+  "location":{
+    "lat":"22.680870",
+    "lon":"88.457874"
+  },
+  "level":"fault",
+  "tags":["domestic_boiler","low_pressure"]
+}
+
+PUT /eventslog/event/1022017003
+{
+  "sourceId":"EVT01022017003",
+  "sourceType":"pda",
+  "generatedOn":"2017-02-01T18:43:47+05:00",
+  "location":{
+    "lat":"22.683300",
+    "lon":"88.464869"
+  },
+  "level":"info",
+  "tags":["engineer","idle"]
+}
+
+GET /eventslog/event/_search?q=tags:transformer earth_fault
+
+GET /eventslog/event/_search
+{
+  "query":{
+    "match":{
+      "tags":"earth_fault"
+    }
+  }
+}
